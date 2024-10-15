@@ -1,0 +1,36 @@
+{
+  "name": "evm-tx-deployer-bot.git",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "The Evm Testnet Bot is a powerful tool designed for interacting with EVM-compatible test networks. This bot automates transaction processes, enabling users to perform actions such as ETH to WETH swap interactions seamlessly and daily. Additionally, it provides a built-in smart contract deployment feature, making it an ideal solution for you to do your testnet airdrop.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "deploy": "node deploy.js",
+    "test": "node test.js"
+  },
+  "keywords": [
+    "testnet-bot",
+    "evm-tx-deployer-bot.git",
+    "evm-bot",
+    "smartcontract",
+    "widiskel",
+    "smartcontract-deployer"
+  ],
+  "author": "Widiskel",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Widiskel/evm-tx-deployer-bot.git.git"
+  },
+  "dependencies": {
+    "bip39": "^3.1.0",
+    "ethers": "^6.13.2",
+    "input": "^1.0.1",
+    "moment-timezone": "^0.5.45",
+    "node-fetch": "^3.3.2",
+    "solc": "^0.8.28",
+    "twisters": "^1.1.0",
+    "winston": "^3.13.0"
+  }
+}
