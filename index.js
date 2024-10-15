@@ -15,10 +15,21 @@ async function operation(acc) {
       throw Error("Minimum Eth Balance Is 0.0015 ETH");
     for (const count of Array(Config.WRAPUNWRAPCOUNT)) {
       if (core.balance.ETH < 0.0015)
-        throw Error("Balance is less than 0.0015 ETH, please fill up your balance");
-      await core.deposit();
-      await core.withdraw();
-      core.txCount += 1;
+        throw Error(
+          "Balance is less than 0.0015 ETH, please fill up your balance"
+        );
+      try {
+        await core.deposit();
+        await core.withdraw();
+        core.txCount += 1;
+      } catch (error) {
+        await Helper.delay(
+          3000,
+          acc,
+          `Error during deposit/withdraw operation: ${error.message}`,
+          core
+        );
+      }
       const delay = Helper.random(10000, 60000 * 2);
       await Helper.delay(
         delay,

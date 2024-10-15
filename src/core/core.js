@@ -94,10 +94,7 @@ export default class Core {
         Helper.randomFloat(Config.TXAMOUNTMIN, Config.TXAMOUNTMAX).toString()
       );
       const data = wethContract.interface.encodeFunctionData("deposit");
-      const nonce = await this.provider.getTransactionCount(
-        this.wallet.address,
-        "latest"
-      );
+      const nonce = await this.getOptimalNonce();
       const gasLimit = await this.estimateGasWithRetry(
         WETH.CONTRACTADDRESS,
         amountInWei,
@@ -138,11 +135,8 @@ export default class Core {
       const data = wethContract.interface.encodeFunctionData("withdraw", [
         amountInWei,
       ]);
-      // console.log(data);
-      const nonce = await this.provider.getTransactionCount(
-        this.wallet.address,
-        "latest"
-      );
+
+      const nonce = await this.getOptimalNonce();
       const gasLimit = await this.estimateGasWithRetry(
         WETH.CONTRACTADDRESS,
         0,
@@ -170,21 +164,51 @@ export default class Core {
     logger.info(`TX DATA ${JSON.stringify(Helper.serializeBigInt(tx))}`);
     await Helper.delay(500, this.acc, `Executing TX...`, this);
     const txRes = await this.wallet.sendTransaction(tx);
-    await Helper.delay(
-      500,
-      this.acc,
-      `Tx Executed Waiting For Block Confirmation...`,
-      this
-    );
-    const txRev = await txRes.wait();
-    logger.info(`Tx Confirmed and Finalizing: ${JSON.stringify(txRev)}`);
-    await Helper.delay(
-      5000,
-      this.acc,
-      `Tx Executed \n${RPC.EXPLORER}tx/${txRev.hash}`,
-      this
-    );
+    if (Config.WAITFORBLOCKCONFIRMATION) {
+      await Helper.delay(
+        500,
+        this.acc,
+        `Tx Executed Waiting For Block Confirmation...`,
+        this
+      );
+      const txRev = await txRes.wait();
+      logger.info(`Tx Confirmed and Finalizing: ${JSON.stringify(txRev)}`);
+      await Helper.delay(
+        5000,
+        this.acc,
+        `Tx Executed \n${RPC.EXPLORER}tx/${txRev.hash}`,
+        this
+      );
+    } else {
+      await Helper.delay(500, this.acc, `Tx Executed...`, this);
+      await Helper.delay(
+        5000,
+        this.acc,
+        `Tx Executed \n${RPC.EXPLORER}tx/${txRes.hash}`,
+        this
+      );
+    }
     await this.getBalance(true);
+  }
+
+  async getOptimalNonce() {
+    try {
+      const latestNonce = await this.provider.getTransactionCount(
+        this.wallet.address,
+        "latest"
+      );
+      const pendingNonce = await this.provider.getTransactionCount(
+        this.wallet.address,
+        "pending"
+      );
+      console.log(`Latest Nonce: ${latestNonce}`);
+      console.log(`Pending Nonce: ${pendingNonce}`);
+      const optimalNonce =
+        pendingNonce > latestNonce ? pendingNonce : latestNonce;
+      return optimalNonce;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async estimateGasWithRetry(

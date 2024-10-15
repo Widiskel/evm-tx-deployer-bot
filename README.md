@@ -2,7 +2,7 @@
 The Evm Testnet Bot is a powerful tool designed for interacting with EVM-compatible networks. This bot automates transaction processes, enabling users to perform actions such as ETH to WETH swap interactions seamlessly and daily. Additionally, it provides a built-in smart contract deployment feature, making it an ideal solution for you to do your testnet airdrop.
 
 ## Table Of Contents
-- [Evm TX \& DEPLOYER BOT](#evm-tx--deployer-bot)
+- [EVM TX \& DEPLOYER BOT](#evm-tx--deployer-bot)
   - [Table Of Contents](#table-of-contents)
   - [Prerequisite](#prerequisite)
   - [Join My Telegram Channel](#join-my-telegram-channel)
@@ -84,7 +84,7 @@ Anyway i create new telegram channel just for sharing bot or airdrop, join here
    ```
 3. Run
    ```
-   cp -r accounts/accounts_tmp.js accounts/accounts.js
+   cp -r accounts/accounts_tmp.js accounts/accounts.js && cp -r config/config_tmp.js config/config.js
    ```
 4. Configure your accounts
    ```
@@ -130,7 +130,7 @@ Anyway i create new telegram channel just for sharing bot or airdrop, join here
 5. Navigate to `evm-tx-deployer-bot` directory. 
 6. Navigate to `accounts` folder and rename `accounts_tmp.js` to `accounts.js`.
 7. Now open `acccounts.js` and setup your accounts. 
-8. Now Back to `evm-tx-deployer-bot` directory and Navigate to `config` and adjust the `config.js` as needed.
+8. Now Back to `evm-tx-deployer-bot` directory and Navigate to `config` and rename `config_tmp.js` to `config.js` adjust the `config.js` as needed.
 9.  Back to `evm-tx-deployer-bot` directory.
 10. Navigate to `src/core/network/rpc.js` and Change CHAINID, RPCURL, EXPLORER, and SYMBOL
 11. Back to `evm-tx-deployer-bot` directory.
