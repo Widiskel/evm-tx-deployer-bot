@@ -1,5 +1,8 @@
+import { Config } from "../../../config/config";
+
 export class WETH {
-  static CONTRACTADDRESS = "0x4200000000000000000000000000000000000006";
+  static CONTRACTADDRESS =
+    Config.WETHCONTRACTADDRESS ?? "0x4200000000000000000000000000000000000006";
   static ABI = [
     {
       constant: true,

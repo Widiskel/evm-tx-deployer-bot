@@ -1,6 +1,8 @@
+import { Config } from "../../../config/config";
+
 export class RPC {
-  static CHAINID = 1301;
-  static RPCURL = "https://sepolia.unichain.org";
-  static EXPLORER = "https://sepolia.uniscan.xyz/";
-  static SYMBOL = "ETH";
+  static CHAINID = Config.RPC.CHAINID ?? 1301;
+  static RPCURL = Config.RPC.RPCURL ?? "https://sepolia.unichain.org";
+  static EXPLORER = Config.RPC.EXPLORER ?? "https://sepolia.uniscan.xyz/";
+  static SYMBOL = Config.RPC.SYMBOL ?? "ETH";
 }

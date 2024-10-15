@@ -94,21 +94,11 @@ Anyway i create new telegram channel just for sharing bot or airdrop, join here
     ```
    nano config/config.js
     ```
-6. Configure RPC Provider
-   ```
-   nano src/core/network/rpc.js
-   ```
-   Change CHAINID, RPCURL, EXPLORER, and SYMBOL
-7. Configure WETH Smart Contract Address
-   ```
-   nano src/core/contract/weth.js
-   ```
-   Change Weth CONTRACTADDRESS
-8. To run Auto TX
+6. To run Auto TX
    ```
    npm run start
    ```
-9. To run Contract Deployer
+7. To run Contract Deployer
     ```
     npm run deploy
     ```
@@ -132,16 +122,12 @@ Anyway i create new telegram channel just for sharing bot or airdrop, join here
 7. Now open `acccounts.js` and setup your accounts. 
 8. Now Back to `evm-tx-deployer-bot` directory and Navigate to `config` and rename `config_tmp.js` to `config.js` adjust the `config.js` as needed.
 9.  Back to `evm-tx-deployer-bot` directory.
-10. Navigate to `src/core/network/rpc.js` and Change CHAINID, RPCURL, EXPLORER, and SYMBOL
-11. Back to `evm-tx-deployer-bot` directory.
-12. Navigate to `src/core/contract/weth.js` and Change WETH CONTRACTADDRESS
-13. Back to `evm-tx-deployer-bot` directory.
-14. To start the app open your `Command Prompt` or `Power Shell`
-15. To run auto Tx Bot
+10. To start the app open your `Command Prompt` or `Power Shell`
+11. To run auto Tx Bot
     ```
     npm run start
     ```
-16. To run Smart Contract Deployer
+12. To run Smart Contract Deployer
     ```
     npm run deploy
     ```

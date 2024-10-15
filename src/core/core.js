@@ -201,8 +201,6 @@ export default class Core {
         this.wallet.address,
         "pending"
       );
-      console.log(`Latest Nonce: ${latestNonce}`);
-      console.log(`Pending Nonce: ${pendingNonce}`);
       const optimalNonce =
         pendingNonce > latestNonce ? pendingNonce : latestNonce;
       return optimalNonce;
