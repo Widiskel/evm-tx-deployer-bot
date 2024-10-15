@@ -110,7 +110,7 @@ export default class Core {
         to: WETH.CONTRACTADDRESS,
         value: amountInWei,
         gasLimit,
-        gasPrice: ethers.parseUnits(Config.GWEIPRICE, "gwei"),
+        gasPrice: ethers.parseUnits(Config.GWEIPRICE.toString(), "gwei"),
         nonce: nonce,
         data: data,
       };
@@ -155,7 +155,7 @@ export default class Core {
         to: WETH.CONTRACTADDRESS,
         value: 0,
         gasLimit,
-        gasPrice: ethers.parseUnits(Config.GWEIPRICE, "gwei"),
+        gasPrice: ethers.parseUnits(Config.GWEIPRICE.toString(), "gwei"),
         nonce: nonce,
         data: data,
       };
