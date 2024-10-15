@@ -1,4 +1,4 @@
-import { Config } from "../../../config/config";
+import { Config } from "../../../config/config.js";
 
 export class RPC {
   static CHAINID = Config.RPC.CHAINID ?? 1301;
