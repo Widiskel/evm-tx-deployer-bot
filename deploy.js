@@ -124,6 +124,5 @@ async function deployContract(
     await deployContract(wallet, abi, bytecode, name, symbol, initialSupply);
   } catch (error) {
     console.log("Error During executing bot", error);
-    await startBot();
   }
 })();
