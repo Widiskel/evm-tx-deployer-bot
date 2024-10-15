@@ -86,32 +86,32 @@ Anyway i create new telegram channel just for sharing bot or airdrop, join here
    ```
    cp -r accounts/accounts_tmp.js accounts/accounts.js
    ```
-5. Configure your accounts
+4. Configure your accounts
    ```
    nano accounts/accounts.js
    ```
-6. Configure the bot config
+5. Configure the bot config
     ```
    nano config/config.js
     ```
-7. Configure RPC Provider
+6. Configure RPC Provider
    ```
    nano src/core/network/rpc.js
    ```
    Change CHAINID, RPCURL, EXPLORER, and SYMBOL
-8. Configure WETH Smart Contract Address
+7. Configure WETH Smart Contract Address
    ```
    nano src/core/contract/weth.js
    ```
    Change Weth CONTRACTADDRESS
-9. To run Auto TX
+8. To run Auto TX
    ```
    npm run start
    ```
-10. To run Contract Deployer
-   ```
-   npm run deploy
-   ```
+9. To run Contract Deployer
+    ```
+    npm run deploy
+    ```
    
 ### Windows
 1. Open your `Command Prompt` or `Power Shell`.
