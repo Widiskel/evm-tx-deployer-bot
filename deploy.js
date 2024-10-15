@@ -92,7 +92,7 @@ async function deployContract(
     for (const item of privateKey) {
       ctx += `${privateKey.indexOf(item) + 1}. Account ${
         privateKey.indexOf(item) + 1
-      }\n `;
+      }\n`;
     }
     ctx += `\n \nSelect Account To Deploy Contract : `;
     const opt = await input.text(ctx);
