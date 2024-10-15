@@ -4,6 +4,7 @@ import { Helper } from "../utils/helper.js";
 import logger from "../utils/logger.js";
 import { RPC } from "./network/rpc.js";
 import { WETH } from "./contract/weth.js";
+import { Config } from "../../config/config.js";
 
 export default class Core {
   constructor(acc) {
@@ -90,7 +91,7 @@ export default class Core {
         this.wallet
       );
       const amountInWei = ethers.parseEther(
-        Helper.randomFloat(0.0001, 0.001).toString()
+        Helper.randomFloat(Config.TXAMOUNTMIN, Config.TXAMOUNTMAX).toString()
       );
       const data = wethContract.interface.encodeFunctionData("deposit");
       const nonce = await this.provider.getTransactionCount(
@@ -109,7 +110,7 @@ export default class Core {
         to: WETH.CONTRACTADDRESS,
         value: amountInWei,
         gasLimit,
-        gasPrice: ethers.parseUnits("0.15", "gwei"),
+        gasPrice: ethers.parseUnits(Config.GWEIPRICE, "gwei"),
         nonce: nonce,
         data: data,
       };
@@ -154,7 +155,7 @@ export default class Core {
         to: WETH.CONTRACTADDRESS,
         value: 0,
         gasLimit,
-        gasPrice: ethers.parseUnits("0.15", "gwei"),
+        gasPrice: ethers.parseUnits(Config.GWEIPRICE, "gwei"),
         nonce: nonce,
         data: data,
       };
