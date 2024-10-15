@@ -70,7 +70,7 @@ async function deployContract(
   const result = await contract.deploymentTransaction().wait();
 
   console.log(`Contract Deployed`);
-  console.log(`Contract Hash: ${RPC.EXPLORER}/tx/${result.hash}`);
+  console.log(`Contract Hash: ${RPC.EXPLORER}tx/${result.hash}`);
   console.log(`Contract Address: ${result.contractAddress}`);
 }
 
