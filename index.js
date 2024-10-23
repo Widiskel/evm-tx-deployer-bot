@@ -11,8 +11,23 @@ async function operation(acc) {
     await core.connectWallet();
     await core.getBalance();
 
-    if (core.balance.ETH < 0.0015)
-      throw Error("Minimum Eth Balance Is 0.0015 ETH");
+    if (core.balance.ETH < 0.0015) {
+      if (core.balance.WETH > 0.0001) {
+        try {
+          await core.withdraw();
+        } catch (error) {
+          await Helper.delay(
+            3000,
+            acc,
+            `Error during deposit/withdraw operation: ${error.message}`,
+            core
+          );
+        }
+      } else {
+        throw Error( "Balance is less than 0.0015 ETH, please fill up your balance"); 
+      }
+    }
+    
     for (const count of Array(Config.WRAPUNWRAPCOUNT)) {
       if (core.balance.ETH < 0.0015)
         throw Error(
