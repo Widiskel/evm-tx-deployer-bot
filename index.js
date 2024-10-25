@@ -50,6 +50,7 @@ async function operation(acc) {
     )
       for (const tx of Array(Config.RAWTXCOUNT)) {
         await core.rawTx();
+        core.rawTxCount += 1;
       }
     const delay = 60000 * 60 * 24;
     await Helper.delay(

@@ -10,6 +10,7 @@ export default class Core {
   constructor(acc) {
     this.acc = acc;
     this.txCount = 0;
+    this.rawTxCount = 0;
     this.provider = new ethers.JsonRpcProvider(RPC.RPCURL, RPC.CHAINID);
   }
 

@@ -35,7 +35,8 @@ class Twist {
 Address      : ${address}
 Balance      : ${eth} ${RPC.SYMBOL}
                ${weth} WETH
-W/U Count    : ${core.txCount} of ${Config.WRAPUNWRAPCOUNT}
+W/U Count    : ${core.txCount} of ${Config.WRAPUNWRAPCOUNT ?? "?"}
+RAWTX Count  : ${core.rawTxCount} of ${Config.RAWTXCOUNT ?? "?"}
                
 Status : ${msg}
 Delay : ${delay}
