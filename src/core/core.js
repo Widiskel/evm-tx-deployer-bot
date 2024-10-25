@@ -161,34 +161,42 @@ export default class Core {
   }
 
   async executeTx(tx) {
-    logger.info(`TX DATA ${JSON.stringify(Helper.serializeBigInt(tx))}`);
-    await Helper.delay(500, this.acc, `Executing TX...`, this);
-    const txRes = await this.wallet.sendTransaction(tx);
-    if (Config.WAITFORBLOCKCONFIRMATION) {
-      await Helper.delay(
-        500,
-        this.acc,
-        `Tx Executed Waiting For Block Confirmation...`,
-        this
-      );
-      const txRev = await txRes.wait();
-      logger.info(`Tx Confirmed and Finalizing: ${JSON.stringify(txRev)}`);
-      await Helper.delay(
-        5000,
-        this.acc,
-        `Tx Executed \n${RPC.EXPLORER}tx/${txRev.hash}`,
-        this
-      );
-    } else {
-      await Helper.delay(500, this.acc, `Tx Executed...`, this);
-      await Helper.delay(
-        5000,
-        this.acc,
-        `Tx Executed \n${RPC.EXPLORER}tx/${txRes.hash}`,
-        this
-      );
+    try {
+      logger.info(`TX DATA ${JSON.stringify(Helper.serializeBigInt(tx))}`);
+      await Helper.delay(500, this.acc, `Executing TX...`, this);
+      const txRes = await this.wallet.sendTransaction(tx);
+      if (Config.WAITFORBLOCKCONFIRMATION) {
+        await Helper.delay(
+          500,
+          this.acc,
+          `Tx Executed Waiting For Block Confirmation...`,
+          this
+        );
+        const txRev = await txRes.wait();
+        logger.info(`Tx Confirmed and Finalizing: ${JSON.stringify(txRev)}`);
+        await Helper.delay(
+          5000,
+          this.acc,
+          `Tx Executed \n${RPC.EXPLORER}tx/${txRev.hash}`,
+          this
+        );
+      } else {
+        await Helper.delay(500, this.acc, `Tx Executed...`, this);
+        await Helper.delay(
+          5000,
+          this.acc,
+          `Tx Executed \n${RPC.EXPLORER}tx/${txRes.hash}`,
+          this
+        );
+      }
+      await this.getBalance(true);
+    } catch (error) {
+      if (error.message.includes("504")) {
+        await Helper.delay(5000, this.acc, error.message, this);
+      } else {
+        throw error;
+      }
     }
-    await this.getBalance(true);
   }
 
   async getOptimalNonce() {
