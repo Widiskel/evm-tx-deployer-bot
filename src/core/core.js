@@ -160,6 +160,43 @@ export default class Core {
     }
   }
 
+  async rawTx() {
+    try {
+      await Helper.delay(
+        500,
+        this.acc,
+        `Try To Executing RAW Transaction`,
+        this
+      );
+
+      const amountInWei = ethers.parseEther(
+        Helper.randomFloat(Config.TXAMOUNTMIN, Config.TXAMOUNTMAX).toString()
+      );
+      const data = Config.RAWTX.RAWDATA;
+      const nonce = await this.getOptimalNonce();
+      const gasLimit = await this.estimateGasWithRetry(
+        Config.RAWTX.CONTRACTTOINTERACT,
+        amountInWei,
+        data,
+        3,
+        1000
+      );
+
+      const tx = {
+        to: Config.RAWTX.CONTRACTTOINTERACT,
+        value: amountInWei,
+        gasLimit,
+        gasPrice: ethers.parseUnits(Config.GWEIPRICE.toString(), "gwei"),
+        nonce: nonce,
+        data: data,
+      };
+
+      await this.executeTx(tx);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async executeTx(tx) {
     try {
       logger.info(`TX DATA ${JSON.stringify(Helper.serializeBigInt(tx))}`);
