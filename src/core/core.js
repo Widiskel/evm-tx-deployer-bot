@@ -5,12 +5,11 @@ import logger from "../utils/logger.js";
 import { RPC } from "./network/rpc.js";
 import { WETH } from "./contract/weth.js";
 import { Config } from "../../config/config.js";
+import sqlite from "./db/sqlite.js";
 
 export default class Core {
   constructor(acc) {
     this.acc = acc;
-    this.txCount = 0;
-    this.rawTxCount = 0;
     this.provider = new ethers.JsonRpcProvider(RPC.RPCURL, RPC.CHAINID);
   }
 
@@ -227,6 +226,7 @@ export default class Core {
           this
         );
       }
+
       await this.getBalance(true);
     } catch (error) {
       if (error.message.includes("504")) {

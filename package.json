@@ -30,6 +30,8 @@
     "moment-timezone": "^0.5.45",
     "node-fetch": "^3.3.2",
     "solc": "^0.8.28",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7",
     "twisters": "^1.1.0",
     "winston": "^3.13.0"
   }

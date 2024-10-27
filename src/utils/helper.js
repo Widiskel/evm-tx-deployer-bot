@@ -5,19 +5,19 @@ import { ethers } from "ethers";
 
 export class Helper {
   static delay = (ms, acc, msg, obj) => {
-    return new Promise((resolve) => {
+    return new Promise(async (resolve) => {
       let remainingMilliseconds = ms;
 
       if (acc != undefined) {
-        twist.log(msg, acc, obj, `Delaying for ${this.msToTime(ms)}`);
+        await twist.log(msg, acc, obj, `Delaying for ${this.msToTime(ms)}`);
       } else {
         twist.info(`Delaying for ${this.msToTime(ms)}`);
       }
 
-      const interval = setInterval(() => {
+      const interval = setInterval(async () => {
         remainingMilliseconds -= 1000;
         if (acc != undefined) {
-          twist.log(
+          await twist.log(
             msg,
             acc,
             obj,
@@ -37,7 +37,7 @@ export class Helper {
         clearInterval(interval);
         await twist.clearInfo();
         if (acc) {
-          twist.log(msg, acc, obj);
+          await twist.log(msg, acc, obj);
         }
         resolve();
       }, ms);

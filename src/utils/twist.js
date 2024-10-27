@@ -4,6 +4,7 @@ import Core from "../core/core.js";
 import { privateKey } from "../../accounts/accounts.js";
 import { RPC } from "../core/network/rpc.js";
 import { Config } from "../../config/config.js";
+import sqlite from "../core/db/sqlite.js";
 
 class Twist {
   constructor() {
@@ -17,7 +18,7 @@ class Twist {
    * @param {string} msg
    * @param {string} delay
    */
-  log(msg = "", acc = "", core = new Core(), delay) {
+  async log(msg = "", acc = "", core = new Core(), delay) {
     const accIdx = privateKey.indexOf(acc);
     if (delay == undefined) {
       logger.info(`Account ${accIdx + 1} - ${msg}`);
@@ -29,14 +30,17 @@ class Twist {
     const eth = balance.ETH ?? "-";
     const weth = balance.WETH ?? "-";
 
+    const tx = (await sqlite.getTodayTxLog(address, "tx")).length;
+    const raw = (await sqlite.getTodayTxLog(address, "raw")).length;
+
     this.twisters.put(acc, {
       text: `
 ================== Account ${accIdx + 1} =================
 Address      : ${address}
 Balance      : ${eth} ${RPC.SYMBOL}
                ${weth} WETH
-W/U Count    : ${core.txCount} of ${Config.WRAPUNWRAPCOUNT ?? "?"}
-RAWTX Count  : ${core.rawTxCount} of ${Config.RAWTXCOUNT ?? "?"}
+W/U Count    : ${tx} of ${Config.WRAPUNWRAPCOUNT ?? "?"}
+RAWTX Count  : ${raw} of ${Config.RAWTXCOUNT ?? "?"}
                
 Status : ${msg}
 Delay : ${delay}
