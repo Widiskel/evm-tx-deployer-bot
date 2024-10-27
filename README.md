@@ -68,6 +68,7 @@ Anyway i create new telegram channel just for sharing bot or airdrop, join here
 - Multi Account 
 - Support PK & SEED
 - Auto TX Daily (Wrap Unwrap ETH)
+- Auto TX with RAW TX DATA
 - Deploy Smart Contract
 
 
