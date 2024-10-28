@@ -11,7 +11,7 @@ The Evm Testnet Bot is a powerful tool designed for interacting with EVM-compati
     - [Linux](#linux)
     - [Windows](#windows)
   - [Update Bot](#update-bot)
-  - [NOTE](#note)
+  - [IMPORTANT NOTE (READ IT THIS IS NOT DECORATION)](#important-note-read-it-this-is-not-decoration)
   - [CONTRIBUTE](#contribute)
   - [SUPPORT](#support)
 
@@ -155,8 +155,8 @@ To update bot follow this step :
 2. start the bot
 
 
-## NOTE
-DWYOR
+## IMPORTANT NOTE (READ IT THIS IS NOT DECORATION)
+DWYOR & Always use a new wallet when running the bot, I am not responsible for any loss of assets.
 
 ## CONTRIBUTE
 
