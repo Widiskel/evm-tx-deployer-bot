@@ -16,11 +16,12 @@ async function operation(acc) {
 
     if (core.balance.ETH < 0.0015)
       throw Error("Minimum Eth Balance Is 0.0015 ETH");
-    if (Config.USEWRAPUNWRAP ?? true)
-      for (const count of Array(
-        Config.WRAPUNWRAPCOUNT -
-          (await sqlite.getTodayTxLog(core.address, "tx")).length
-      )) {
+    if (Config.USEWRAPUNWRAP ?? true) {
+      const currentCount =
+        Number(Config.WRAPUNWRAPCOUNT) -
+        Number((await sqlite.getTodayTxLog(core.address, "tx")).length);
+      const txCount = currentCount > 0 ? currentCount : 0;
+      for (const count of Array(txCount)) {
         if (core.balance.ETH < 0.0015)
           throw Error(
             "Balance is less than 0.0015 ETH, please fill up your balance"
@@ -45,7 +46,7 @@ async function operation(acc) {
           core
         );
       }
-
+    }
     if (
       (Config.USERAWTXDATA ?? false) &&
       (Config.RAWTX ?? undefined) !=
@@ -53,14 +54,16 @@ async function operation(acc) {
           CONTRACTTOINTERACT: "CONTRACTADDRESSTOINTERACT",
           RAWDATA: "RAWDATA",
         }
-    )
-      for (const tx of Array(
-        Config.RAWTXCOUNT -
-          (await sqlite.getTodayTxLog(core.address, "raw")).length
-      )) {
+    ) {
+      const currentCount =
+        Number(Config.WRAPUNWRAPCOUNT) -
+        Number((await sqlite.getTodayTxLog(core.address, "raw")).length);
+      const txCount = currentCount > 0 ? currentCount : 0;
+      for (const tx of Array(txCount)) {
         await core.rawTx();
         await sqlite.insertData(core.address, new Date().toISOString(), "raw");
       }
+    }
     const delay = 60000 * 60 * 24;
     await Helper.delay(
       delay,
