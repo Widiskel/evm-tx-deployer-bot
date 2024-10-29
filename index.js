@@ -56,7 +56,7 @@ async function operation(acc) {
         }
     ) {
       const currentCount =
-        Number(Config.WRAPUNWRAPCOUNT) -
+        Number(Config.RAWTXCOUNT) -
         Number((await sqlite.getTodayTxLog(core.address, "raw")).length);
       const txCount = currentCount > 0 ? currentCount : 0;
       for (const tx of Array(txCount)) {
