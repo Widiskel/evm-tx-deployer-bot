@@ -49,7 +49,8 @@ async function operation(acc) {
     }
     if (
       (Config.USERAWTXDATA ?? false) &&
-      (Config.RAWTX ?? undefined) !=
+      Config.RAWTX != undefined &&
+      Config.RAWTX !=
         {
           CONTRACTTOINTERACT: "CONTRACTADDRESSTOINTERACT",
           RAWDATA: "RAWDATA",
