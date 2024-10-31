@@ -68,7 +68,8 @@ Anyway i create new telegram channel just for sharing bot or airdrop, join here
 - Multi Account 
 - Support PK & SEED
 - Auto TX Daily (Wrap Unwrap ETH)
-- Auto TX with RAW TX DATA
+- Auto TX Daily With RAW TX DATA
+- Auto TX Daily (SELF TRANSFER)
 - Deploy Smart Contract
 
 
@@ -152,11 +153,14 @@ To update bot follow this step :
    ```
    npm update
    ```
-2. start the bot
+3. start the bot
+4. if any eror happen check `log/app.log`
 
 
 ## IMPORTANT NOTE (READ IT THIS IS NOT DECORATION)
 DWYOR & Always use a new wallet when running the bot, I am not responsible for any loss of assets.
+
+If any error regarding SQL, try to delete `database.db` first
 
 ## CONTRIBUTE
 
