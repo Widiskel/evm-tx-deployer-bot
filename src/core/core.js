@@ -6,6 +6,7 @@ import { RPC } from "./network/rpc.js";
 import { WETH } from "./contract/weth.js";
 import { Config } from "../../config/config.js";
 import sqlite from "./db/sqlite.js";
+import { DEPLOYEDTOKEN } from "./contract/deployed_token.js";
 
 export default class Core {
   constructor(acc) {
@@ -221,14 +222,57 @@ export default class Core {
         this
       );
       const nonce = await this.getOptimalNonce();
-      const fee = await this.provider.getFeeData();
-      const tx = {
-        to: this.address,
-        value: ethers.parseEther(amount.toString()),
-        nonce,
-        gasLimit: fee.maxFeePerGas,
-        gasPrice: ethers.parseUnits(Config.GWEIPRICE.toString(), "gwei"),
-      };
+
+      let tx;
+      if (DEPLOYEDTOKEN.CONTRACTADDRESS) {
+        const tokenContract = new ethers.Contract(
+          DEPLOYEDTOKEN.CONTRACTADDRESS,
+          DEPLOYEDTOKEN.ABI,
+          this.wallet
+        );
+        const allowance = await tokenContract.allowance(
+          this.address,
+          DEPLOYEDTOKEN.CONTRACTADDRESS
+        );
+        if (allowance == 0) {
+          await Helper.delay(1000, this.acc, `Approving Token Spend`, this);
+          const approval = await tokenContract.approve(
+            DEPLOYEDTOKEN.CONTRACTADDRESS,
+            ethers.MaxUint256
+          );
+          await approval.wait();
+          await Helper.delay(1000, this.acc, `Token Approved`, this);
+        }
+        const data = await tokenContract.transfer.populateTransaction(
+          this.address,
+          ethers.parseEther(amount.toString())
+        );
+        const gasLimit = await this.estimateGasWithRetry(
+          data.to,
+          0,
+          data.data,
+          3,
+          1000
+        );
+
+        tx = {
+          to: data.to,
+          nonce,
+          data: data.data,
+          gasLimit,
+          gasPrice: ethers.parseUnits(Config.GWEIPRICE.toString(), "gwei"),
+        };
+      } else {
+        const fee = await this.provider.getFeeData();
+        tx = {
+          to: this.address,
+          value: ethers.parseEther(amount.toString()),
+          nonce,
+          gasLimit: fee.maxFeePerGas,
+          gasPrice: ethers.parseUnits(Config.GWEIPRICE.toString(), "gwei"),
+        };
+      }
+
       await this.executeTx(tx);
     } catch (error) {
       throw error;

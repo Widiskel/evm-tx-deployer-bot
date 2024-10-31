@@ -20,6 +20,7 @@ export class Config {
   //TRANSFER SECTION
   static USESELFTRANSFER = false;
   static SELFTRANSFERCOUNT = 10;
+  static CONTRACTADDRESS = undefined; //undefined for ETH / FILL WITH YOUR DEPLOYED CONTRACT
 
   //RPC PROVIDER SECTION
   static RPC = {
