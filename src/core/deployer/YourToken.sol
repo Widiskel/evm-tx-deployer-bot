@@ -43,21 +43,41 @@ contract YourToken {
         require(balanceOf[msg.sender] >= _amount, "Insufficient balance");
         balanceOf[msg.sender] -= _amount;
         payable(msg.sender).transfer(_amount);
-        emit Withdraw(msg.sender, _amount);
+        emit Withdrawal(msg.sender, _amount);
     }
 
-    function transfer(address _to, uint256 _amount) external {
+    function transfer(address _to, uint256 _amount) external returns (bool) {
         require(balanceOf[msg.sender] >= _amount, "Insufficient balance");
         balanceOf[msg.sender] -= _amount;
         balanceOf[_to] += _amount;
         emit Transfer(msg.sender, _to, _amount);
+        return true;
+    }
+
+    function approve(address _spender, uint256 _amount) external returns (bool) {
+        allowance[msg.sender][_spender] = _amount;
+        emit Approval(msg.sender, _spender, _amount);
+        return true;
+    }
+
+    function transferFrom(address _from, address _to, uint256 _amount) external returns (bool) {
+        require(balanceOf[_from] >= _amount, "Insufficient balance");
+        require(allowance[_from][msg.sender] >= _amount, "Allowance exceeded");
+        
+        balanceOf[_from] -= _amount;
+        balanceOf[_to] += _amount;
+        allowance[_from][msg.sender] -= _amount;
+        
+        emit Transfer(_from, _to, _amount);
+        return true;
     }
 
     function getBalance(address _account) public view returns (uint256) {
         return balanceOf[_account];
     }
 
-    event Transfer(address indexed from, address indexed to, uint256 value);
-    event Deposit(address indexed from, uint256 value);
-    event Withdraw(address indexed from, uint256 value);
+    event Transfer(address indexed src, address indexed dst, uint256 wad);
+    event Deposit(address indexed dst, uint256 wad);
+    event Withdrawal(address indexed src, uint256 wad);
+    event Approval(address indexed src, address indexed guy, uint256 wad);
 }

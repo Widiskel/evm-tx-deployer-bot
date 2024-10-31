@@ -2,7 +2,9 @@ import { Config } from "../../../config/config.js";
 
 export class WETH {
   static CONTRACTADDRESS =
-    Config.WETHCONTRACTADDRESS ?? "0x4200000000000000000000000000000000000006";
+    Config.WETHCONTRACTADDRESS && Config.WETHCONTRACTADDRESS != ""
+      ? Config.WETHCONTRACTADDRESS
+      : undefined;
   static ABI = [
     {
       constant: true,

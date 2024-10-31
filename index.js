@@ -64,6 +64,18 @@ async function operation(acc) {
         await sqlite.insertData(core.address, new Date().toISOString(), "raw");
       }
     }
+
+    if (Config.USESELFTRANSFER ?? false) {
+      const currentCount =
+        Number(Config.SELFTRANSFERCOUNT) -
+        Number((await sqlite.getTodayTxLog(core.address, "self")).length);
+      const txCount = currentCount > 0 ? currentCount : 0;
+      for (const tx of Array(txCount)) {
+        await core.transfer();
+        await sqlite.insertData(core.address, new Date().toISOString(), "self");
+      }
+    }
+
     const delay = 60000 * 60 * 24;
     await Helper.delay(
       delay,

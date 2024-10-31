@@ -29,18 +29,21 @@ class Twist {
     const balance = core.balance ?? {};
     const eth = balance.ETH ?? "-";
     const weth = balance.WETH ?? "-";
+    const wethSymbol = core.tokenSymbol ?? "-";
 
     const tx = (await sqlite.getTodayTxLog(address, "tx")).length;
     const raw = (await sqlite.getTodayTxLog(address, "raw")).length;
+    const self = (await sqlite.getTodayTxLog(address, "self")).length;
 
     this.twisters.put(acc, {
       text: `
 ================== Account ${accIdx + 1} =================
-Address      : ${address}
-Balance      : ${eth} ${RPC.SYMBOL}
-               ${weth} WETH
-W/U Count    : ${tx} of ${Config.WRAPUNWRAPCOUNT ?? "?"}
-RAWTX Count  : ${raw} of ${Config.RAWTXCOUNT ?? "?"}
+Address         : ${address}
+Balance         : ${eth} ${RPC.SYMBOL}
+                  ${weth} ${wethSymbol}
+W/U Count       : ${tx} of ${Config.WRAPUNWRAPCOUNT ?? "?"}
+RAWTX Count     : ${raw} of ${Config.RAWTXCOUNT ?? "?"}
+Transfer Count  : ${self} of ${Config.SELFTRANSFERCOUNT ?? "?"}
                
 Status : ${msg}
 Delay : ${delay}

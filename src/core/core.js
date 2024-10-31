@@ -64,17 +64,22 @@ export default class Core {
       const ethBalance = ethers.formatEther(
         await this.provider.getBalance(this.wallet.address)
       );
-      const wethContract = new ethers.Contract(
-        WETH.CONTRACTADDRESS,
-        WETH.ABI,
-        this.provider
-      );
-      const wethBalance = ethers.formatEther(
-        await wethContract.balanceOf(this.address)
-      );
+      let wethContract;
+      let wethBalance;
+      if (WETH.CONTRACTADDRESS) {
+        wethContract = new ethers.Contract(
+          WETH.CONTRACTADDRESS,
+          WETH.ABI,
+          this.provider
+        );
+        wethBalance = ethers.formatEther(
+          await wethContract.balanceOf(this.address)
+        );
+        this.tokenSymbol = await wethContract.symbol();
+      }
       this.balance = {
         ETH: ethBalance,
-        WETH: wethBalance,
+        WETH: wethContract ? wethBalance : "-",
       };
       await Helper.delay(500, this.acc, `Balance updated`, this);
     } catch (error) {
@@ -83,7 +88,12 @@ export default class Core {
   }
   async deposit() {
     try {
-      await Helper.delay(500, this.acc, `Try To Wrap ETH to WETH`, this);
+      await Helper.delay(
+        500,
+        this.acc,
+        `Try To Wrap ${RPC.SYMBOL} to ${this.tokenSymbol}`,
+        this
+      );
 
       const wethContract = new ethers.Contract(
         WETH.CONTRACTADDRESS,
@@ -119,14 +129,18 @@ export default class Core {
   }
   async withdraw() {
     try {
-      await Helper.delay(500, this.acc, `Trying to Withdraw WETH to ETH`, this);
+      await Helper.delay(
+        500,
+        this.acc,
+        `Trying to Unwrap ${this.tokenSymbol} to ${RPC.SYMBOL}`,
+        this
+      );
 
       const wethContract = new ethers.Contract(
         WETH.CONTRACTADDRESS,
         WETH.ABI,
         this.wallet
       );
-
       const wethBalance = await wethContract.balanceOf(this.wallet.address);
       const amountInWei = wethBalance;
       const amountInEth = ethers.formatEther(amountInWei);
@@ -191,6 +205,30 @@ export default class Core {
         data: data,
       };
 
+      await this.executeTx(tx);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async transfer() {
+    const amount = Helper.randomFloat(Config.TXAMOUNTMIN, Config.TXAMOUNTMAX);
+    try {
+      await Helper.delay(
+        1000,
+        this.acc,
+        `Trying to transfer ${amount}${RPC.SYMBOL} to ${this.address}`,
+        this
+      );
+      const nonce = await this.getOptimalNonce();
+      const fee = await this.provider.getFeeData();
+      const tx = {
+        to: this.address,
+        value: ethers.parseEther(amount.toString()),
+        nonce,
+        gasLimit: fee.maxFeePerGas,
+        gasPrice: ethers.parseUnits(Config.GWEIPRICE.toString(), "gwei"),
+      };
       await this.executeTx(tx);
     } catch (error) {
       throw error;
