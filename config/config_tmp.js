@@ -24,9 +24,9 @@ export class Config {
 
   //RPC PROVIDER SECTION
   static RPC = {
-    CHAINID: undefined, //CHAIN ID
-    RPCURL: undefined, //RPC URL
-    EXPLORER: undefined, //BLOCK EXPLORER
+    CHAINID: undefined, //CHAIN ID EX: 123123
+    RPCURL: undefined, //RPC URL EX : "https://xxx"
+    EXPLORER: undefined, //BLOCK EXPLORER EX "https://explorer"
     SYMBOL: "ETH",
   };
 }
