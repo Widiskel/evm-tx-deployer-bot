@@ -263,12 +263,14 @@ export default class Core {
           gasPrice: ethers.parseUnits(Config.GWEIPRICE.toString(), "gwei"),
         };
       } else {
-        const fee = await this.provider.getFeeData();
+        const fee = await this.provider.estimateGas({
+          to: this.address,
+        });
         tx = {
           to: this.address,
           value: ethers.parseEther(amount.toString()),
           nonce,
-          gasLimit: fee.maxFeePerGas,
+          gasLimit: fee,
           gasPrice: ethers.parseUnits(Config.GWEIPRICE.toString(), "gwei"),
         };
       }
@@ -353,6 +355,7 @@ export default class Core {
           value: amount,
           data: rawdata,
         });
+        console.log(gasLimit);
         return gasLimit;
       } catch (err) {
         await Helper.delay(
