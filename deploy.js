@@ -93,7 +93,7 @@ async function deployContract(
         initialSupplyBigNumber
       );
       const estimatedGas = await wallet.provider.estimateGas({
-        ...deployTx,
+        data: deployTx,
         from: wallet.address,
       });
       console.log(`Estimated gas: ${estimatedGas.toString()}`);
