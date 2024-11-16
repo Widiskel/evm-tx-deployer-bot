@@ -66,7 +66,7 @@ async function deployContract(
   console.log(`Deploying Contract...`);
   const factory = new ethers.ContractFactory(abi, bytecode, wallet);
   const initialSupplyBigNumber = ethers.parseUnits(
-    initialSupply.toString(),
+    initialSupply,
     18
   );
 
