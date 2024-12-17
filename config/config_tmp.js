@@ -27,6 +27,6 @@ export class Config {
     CHAINID: undefined, //CHAIN ID EX: 123123
     RPCURL: undefined, //RPC URL EX : "https://xxx"
     EXPLORER: undefined, //BLOCK EXPLORER EX "https://explorer"
-    SYMBOL: "ETH",
+    SYMBOL: "ETH", //CURRENCY SYMBOL EX: "ETH"
   };
 }

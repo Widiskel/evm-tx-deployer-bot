@@ -6,13 +6,17 @@ import { Helper } from "./src/utils/helper.js";
 import input from "input";
 import { RPC } from "./src/core/network/rpc.js";
 import { ethers } from "ethers";
+import { DeployerConfig } from "./config/deployer_config.js";
 
 const basePath = "src/core/deployer";
 const provider = new ethers.JsonRpcProvider(RPC.RPCURL, RPC.CHAINID);
+const maxError = 5;
+let currentError = 0;
 async function compileContract() {
   console.log("Compiling Contract...");
   const contractPath = path.resolve(basePath, "YourToken.sol");
   const contractSource = fs.readFileSync(contractPath, "utf8");
+  console.log("Contract path :", contractPath);
 
   const input = {
     language: "Solidity",
@@ -27,6 +31,11 @@ async function compileContract() {
           "*": ["abi", "evm.bytecode"],
         },
       },
+      optimizer: {
+        enabled: true,
+        runs: 200,
+      },
+      evmVersion: DeployerConfig.EVMVERSION,
     },
   };
 
@@ -61,64 +70,59 @@ async function deployContract(
   bytecode,
   name,
   symbol,
-  initialSupply
+  initialSupply,
+  gas
 ) {
-  console.log(`Deploying Contract...`);
   const factory = new ethers.ContractFactory(abi, bytecode, wallet);
-  const initialSupplyBigNumber = ethers.parseUnits(
-    initialSupply,
-    18
+  const initialSupplyBigNumber = ethers.parseUnits(initialSupply, 18);
+  console.log(
+    `Deploying Contract...
+    
+  Name : ${name}
+  Symbol : ${symbol}
+  Suppy : ${initialSupplyBigNumber}
+`
   );
 
   try {
-    const contract = await factory.deploy(name, symbol, initialSupplyBigNumber);
-    console.log(
-      `Contract Deployment Tx Sent ${RPC.EXPLORER}tx/${
-        contract.deploymentTransaction().hash
-      }, Waiting for Block Confirmation`
+    gas += BigInt(DeployerConfig.GASLIMIT);
+    console.log("Deploying using gas : ", gas);
+
+    const contract = await factory.deploy(
+      name,
+      symbol,
+      initialSupplyBigNumber,
+      {
+        gasLimit: gas,
+        gasPrice: ethers.parseUnits(
+          DeployerConfig.GWEIPRICE.toString(),
+          "gwei"
+        ),
+      }
     );
-    const result = await contract.deploymentTransaction().wait();
-    console.log(`Contract Deployed`);
-    console.log(`Contract Hash: ${RPC.EXPLORER}tx/${result.hash}`);
-    console.log(`Contract Address: ${result.contractAddress}`);
+    await confirmDeployment(contract);
   } catch (error) {
-    console.warn(
-      "Initial deployment attempt failed, retrying with estimated gas..."
+    console.warn(`Deployment attempt failed ${error.message}...`);
+    await deployContract(
+      wallet,
+      abi,
+      bytecode,
+      name,
+      symbol,
+      initialSupply,
+      gas
     );
-
-    try {
-      const deployTx = factory.getDeployTransaction(
-        name,
-        symbol,
-        initialSupplyBigNumber
-      );
-      const estimatedGas = await wallet.provider.estimateGas({
-        ...deployTx,
-        from: wallet.address,
-      });
-      console.log(`Estimated gas: ${estimatedGas.toString()}`);
-
-      const contract = await factory.deploy(
-        name,
-        symbol,
-        initialSupplyBigNumber,
-        {
-          gasLimit: estimatedGas,
-        }
-      );
-      console.log(
-        `Contract Deployment Tx Sent ${RPC.EXPLORER}tx/${
-          contract.deploymentTransaction().hash
-        }, Waiting for Block Confirmation`
-      );
-      const result = await contract.deploymentTransaction().wait();
-      console.log(`Contract Deployed`);
-      console.log(`Contract Hash: ${RPC.EXPLORER}tx/${result.hash}`);
-      console.log(`Contract Address: ${result.contractAddress}`);
-    } catch (error) {
-      console.error("Deployment Failed:", error);
-    }
   }
+}
+
+async function confirmDeployment(contract) {
+  console.log(
+    `Contract Deployment Tx Sent: ${RPC.EXPLORER}tx/${
+      contract.deploymentTransaction().hash
+    }, Waiting for Block Confirmation`
+  );
+  const result = await contract.deploymentTransaction().wait();
+  console.log(`Contract Deployed at: ${result.contractAddress}`);
 }
 
 (async () => {
