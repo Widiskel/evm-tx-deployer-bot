@@ -102,16 +102,24 @@ async function deployContract(
     );
     await confirmDeployment(contract);
   } catch (error) {
-    console.warn(`Deployment attempt failed ${error.message}...`);
-    await deployContract(
-      wallet,
-      abi,
-      bytecode,
-      name,
-      symbol,
-      initialSupply,
-      gas
+    console.warn(
+      `Deployment attempt failed, ${
+        currentError != maxError ? "Retrying" : "Max Error Reached"
+      }`
     );
+    console.error(error.message);
+    if (currentError != maxError) {
+      currentError += 1;
+      await deployContract(
+        wallet,
+        abi,
+        bytecode,
+        name,
+        symbol,
+        initialSupply,
+        gas
+      );
+    }
   }
 }
 
