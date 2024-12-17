@@ -85,7 +85,11 @@ async function deployContract(
   );
 
   try {
-    gas += BigInt(DeployerConfig.GASLIMIT);
+    if (!gas) {
+      gas = BigInt(DeployerConfig.GASLIMIT);
+    } else {
+      gas = gas + BigInt(DeployerConfig.GASLIMIT);
+    }
     console.log("Deploying using gas : ", gas);
 
     const contract = await factory.deploy(
