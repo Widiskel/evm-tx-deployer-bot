@@ -355,7 +355,7 @@ export default class Core {
           value: amount,
           data: rawdata,
         });
-        console.log(gasLimit);
+        // console.log(gasLimit);
         return gasLimit;
       } catch (err) {
         await Helper.delay(
