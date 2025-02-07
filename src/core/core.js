@@ -18,7 +18,7 @@ export default class Core {
       const data = this.acc;
       const accIdx = privateKey.indexOf(this.acc);
       await Helper.delay(
-        1000,
+        500,
         this.acc,
         `Connecting to Account : ${accIdx + 1}`,
         this
@@ -42,7 +42,7 @@ export default class Core {
       this.onchainCount = await this.provider.getTransactionCount(this.address);
 
       await Helper.delay(
-        1000,
+        500,
         this.acc,
         `Wallet connected ${JSON.stringify(this.wallet.address)}`,
         this
@@ -179,7 +179,7 @@ export default class Core {
       let tx;
       if (toaddr) {
         await Helper.delay(
-          1000,
+          500,
           this.acc,
           `Trying to transfer ${amount} ${RPC.SYMBOL} to ${this.address}`,
           this
@@ -198,7 +198,7 @@ export default class Core {
             Helper.random(Config.OTHERUSERADDRESSLIST - 1)
           ];
         await Helper.delay(
-          1000,
+          500,
           this.acc,
           `Trying to transfer ${amount}${RPC.SYMBOL} to ${destAddress}`,
           this
@@ -234,11 +234,11 @@ export default class Core {
           `Tx Executed Waiting For Block Confirmation...`,
           this
         );
-        const txRev = await this.waitWithTimeout(txRes, 5 * 60 * 1000); // 5 minutes timeout
+        const txRev = await this.waitWithTimeout(txRes, 5 * 60 * 500); // 5 minutes timeout
 
         logger.info(`Tx Confirmed and Finalizing: ${JSON.stringify(txRev)}`);
         await Helper.delay(
-          5000,
+          3000,
           this.acc,
           `Tx Executed and Confirmed \n${explorer}tx/${txRev.hash}`,
           this
@@ -246,7 +246,7 @@ export default class Core {
       } else {
         await Helper.delay(500, this.acc, `Tx Executed...`, this);
         await Helper.delay(
-          5000,
+          3000,
           this.acc,
           `Tx Executed \n${explorer}tx/${txRes.hash}`,
           this
@@ -374,10 +374,10 @@ export default class Core {
     const allowanceRes = await contract.allowance(this.address, spenderCA);
 
     if (Number(allowanceRes) < Config.TXAMOUNTMAX) {
-      await Helper.delay(1000, this.acc, `Try To Approving Token Spend`, this);
+      await Helper.delay(500, this.acc, `Try To Approving Token Spend`, this);
       const approval = await contract.approve(spenderCA, ethers.MaxUint256);
       await approval.wait();
-      await Helper.delay(1000, this.acc, `Token Approved`, this);
+      await Helper.delay(500, this.acc, `Token Approved`, this);
     }
   }
 

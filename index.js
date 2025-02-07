@@ -2,6 +2,7 @@ import { privateKey } from "./accounts/accounts.js";
 import { Config } from "./config/config.js";
 import Core from "./src/core/core.js";
 import sqlite from "./src/core/db/sqlite.js";
+import { RPC } from "./src/core/network/rpc.js";
 import { Helper } from "./src/utils/helper.js";
 import logger from "./src/utils/logger.js";
 import twist from "./src/utils/twist.js";
@@ -14,8 +15,15 @@ async function operation(acc) {
     await core.connectWallet();
     await core.getBalance();
 
-    if (core.balance.ETH < 0.0015)
-      throw Error("Minimum Eth Balance Is 0.0015 ETH");
+    if (core.balance.ETH < 0.0015) {
+      await Helper.delay(
+        100000,
+        acc,
+        `Minimum ${RPC.SYMBOL} Balance Is 0.0015 ${RPC.SYMBOL}`,
+        core
+      );
+      await operation(acc);
+    }
 
     if (Config.USEWRAPUNWRAP ?? true) {
       if (Config.WRAPPEDTOKENCONTRACTADDRESS == undefined)

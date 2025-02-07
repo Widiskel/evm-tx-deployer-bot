@@ -1,5 +1,5 @@
 export class Config {
-  static GWEIPRICE = 0.15; //GWEI PRICE
+  static GWEIPRICE = 0.15; //GWEI PRICE check on explorer , on the top left it will show recomended gas price
   static WAITFORBLOCKCONFIRMATION = true; //IF TRUE AFTER TX EXECUTED BOT WILL WAIT TX TO BE MINED FIRST, IF FALSE AFTER TX EXECUTED BOT WILL CONTINUE TO NEXT TX
   static TXAMOUNTMIN = 0.0001; //TX AMOUNT MIN
   static TXAMOUNTMAX = 0.001; //TX AMOUNT MAX
