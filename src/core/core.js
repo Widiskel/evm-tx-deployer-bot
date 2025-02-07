@@ -161,10 +161,9 @@ export default class Core {
         this.wallet
       );
 
-      const amountInWei = 1;
+      const amountInWei = ethers.parseEther("1");
       await this.tokenApproval(DEPLOYEDTOKEN.CONTRACTADDRESS, this.address);
       const data = await contract.ping.populateTransaction(amountInWei);
-      // console.log(data);
       const tx = await this.buildTxBody(data, amountInWei);
 
       await this.executeTx(tx);
