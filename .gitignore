@@ -3,7 +3,7 @@ log/*
 sessions/*
 accounts/accounts.js
 src/reference/*
-package-lock.json
+# package-lock.json
 .DS_Store
 build-config.json
 config/config.js
