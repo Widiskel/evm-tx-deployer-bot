@@ -164,7 +164,8 @@ export default class Core {
       const amountInWei = 1;
       await this.tokenApproval(DEPLOYEDTOKEN.CONTRACTADDRESS, this.address);
       const data = await contract.ping.populateTransaction(amountInWei);
-      const tx = await this.buildTxBody(data, amountInWei, 0);
+      // console.log(data);
+      const tx = await this.buildTxBody(data, amountInWei);
 
       await this.executeTx(tx);
     } catch (error) {
