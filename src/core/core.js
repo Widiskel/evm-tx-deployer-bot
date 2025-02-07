@@ -161,7 +161,7 @@ export default class Core {
         this.wallet
       );
 
-      const amountInWei = ethers.parseEther("1");
+      const amountInWei = ethers.parseEther("0");
       await this.tokenApproval(DEPLOYEDTOKEN.CONTRACTADDRESS, this.address);
       const data = await contract.ping.populateTransaction(amountInWei);
       const tx = await this.buildTxBody(data, amountInWei);
@@ -331,7 +331,6 @@ export default class Core {
    */
   async buildTxBody(data, value = 0, to, estimateGas = true) {
     const nonce = await this.getOptimalNonce();
-
     const recipient = to ?? data?.to;
     const txData = data?.data;
     const fee = await this.provider.getFeeData();

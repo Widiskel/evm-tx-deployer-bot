@@ -92,7 +92,15 @@ async function deployContract(
     } else {
       gas = gas + BigInt(DeployerConfig.GASLIMIT);
     }
-    console.log("Deploying using gas : ", gas);
+    const fee = await provider.getFeeData();
+    const customGasPrice = ethers.parseUnits(
+      DeployerConfig.GWEIPRICE.toString(),
+      "gwei"
+    );
+    const gasPrice =
+      fee.gasPrice > customGasPrice ? fee.gasPrice : customGasPrice;
+    console.log("Deploying using gasLimit : ", gas);
+    console.log("Deploying using gasPrice : ", gasPrices);
 
     const contract = await factory.deploy(
       name,
@@ -100,10 +108,7 @@ async function deployContract(
       initialSupplyBigNumber,
       {
         gasLimit: gas,
-        gasPrice: ethers.parseUnits(
-          DeployerConfig.GWEIPRICE.toString(),
-          "gwei"
-        ),
+        gasPrice: gasPrice,
       }
     );
     await confirmDeployment(contract);
