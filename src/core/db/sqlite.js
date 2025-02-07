@@ -16,7 +16,7 @@ class SQLITE {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         address TEXT NOT NULL,
         tx_date DATE NOT NULL,
-        type TEXT CHECK(type IN ('raw', 'tx', 'self'))
+        type TEXT CHECK(type IN ('raw', 'tx', 'self', 'other', 'deployed'))
       )
     `);
 

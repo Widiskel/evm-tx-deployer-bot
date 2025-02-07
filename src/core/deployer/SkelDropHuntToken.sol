@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract YourToken {
+contract SkelDropHuntToken {
     string public name;
     string public symbol;
     uint8 public decimals = 18;
@@ -74,6 +74,18 @@ contract YourToken {
 
     function getBalance(address _account) public view returns (uint256) {
         return balanceOf[_account];
+    }
+
+    function ping(uint256 _amount) external {
+        require(balanceOf[msg.sender] >= _amount, "Insufficient balance");
+        
+        balanceOf[msg.sender] -= _amount;
+        balanceOf[address(this)] += _amount;
+        emit Transfer(msg.sender, address(this), _amount);
+        
+        balanceOf[address(this)] -= _amount;
+        balanceOf[msg.sender] += _amount;
+        emit Transfer(address(this), msg.sender, _amount);
     }
 
     event Transfer(address indexed src, address indexed dst, uint256 wad);

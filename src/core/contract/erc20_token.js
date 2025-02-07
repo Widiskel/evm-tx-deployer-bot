@@ -1,10 +1,8 @@
 import { Config } from "../../../config/config.js";
 
-export class WETH {
-  static CONTRACTADDRESS =
-    Config.WETHCONTRACTADDRESS && Config.WETHCONTRACTADDRESS != ""
-      ? Config.WETHCONTRACTADDRESS
-      : undefined;
+export class ERC20TOKEN {
+  static WRAPPEDTOKEN = Config.WRAPPEDTOKENCONTRACTADDRESS;
+
   static ABI = [
     {
       constant: true,

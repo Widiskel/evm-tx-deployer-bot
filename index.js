@@ -16,7 +16,10 @@ async function operation(acc) {
 
     if (core.balance.ETH < 0.0015)
       throw Error("Minimum Eth Balance Is 0.0015 ETH");
+
     if (Config.USEWRAPUNWRAP ?? true) {
+      if (Config.WRAPPEDTOKENCONTRACTADDRESS == undefined)
+        throw Error("Please Configure WRAPPEDTOKENCONTRACTADDRESS first");
       const currentCount =
         Number(Config.WRAPUNWRAPCOUNT) -
         Number((await sqlite.getTodayTxLog(core.address, "tx")).length);
@@ -47,15 +50,60 @@ async function operation(acc) {
         );
       }
     }
-    if (
-      (Config.USERAWTXDATA ?? false) &&
-      Config.RAWTX != undefined &&
-      Config.RAWTX !=
-        {
-          CONTRACTTOINTERACT: "CONTRACTADDRESSTOINTERACT",
-          RAWDATA: "RAWDATA",
-        }
-    ) {
+
+    if (Config.USETRANSFER ?? false) {
+      const selfTransferCount =
+        Number(Config.SELFTRANSFERCOUNT) -
+        Number((await sqlite.getTodayTxLog(core.address, "self")).length);
+      const txCount = selfTransferCount > 0 ? selfTransferCount : 0;
+      const otherTransferCount =
+        Number(Config.OTHERUSERTRANSFERCOUNT) -
+        Number((await sqlite.getTodayTxLog(core.address, "other")).length);
+      const otherTxCount = otherTransferCount > 0 ? otherTransferCount : 0;
+      for (const tx of Array(txCount)) {
+        await core.transfer();
+        await sqlite.insertData(core.address, new Date().toISOString(), "self");
+      }
+      for (const tx of Array(otherTxCount)) {
+        await core.transfer(false);
+        await sqlite.insertData(
+          core.address,
+          new Date().toISOString(),
+          "other"
+        );
+      }
+    }
+
+    if (Config.DEPLOYCONTRACTINTERACTION ?? false) {
+      if (
+        (Config.DEPLOYCONTRACTADDRESS == undefined) &
+        (Config.DEPLOYCONTRACTADDRESS == "")
+      )
+        throw Error(
+          "Please set DEPLOYCONTRACTADDRESS with your deployed contract address first "
+        );
+
+      const deployedContractInteractCount =
+        Number(Config.DEPLOYCONTRACTINTERACTIONCOUNT) -
+        Number((await sqlite.getTodayTxLog(core.address, "deployed")).length);
+      const txCount =
+        deployedContractInteractCount > 0 ? deployedContractInteractCount : 0;
+
+      for (const tx of Array(txCount)) {
+        await core.deployedContractTx();
+        await sqlite.insertData(
+          core.address,
+          new Date().toISOString(),
+          "deployed"
+        );
+      }
+    }
+
+    if (Config.USERAWTXDATA ?? false) {
+      if (Config.RAWTX == undefined || Config.RAWTX == [])
+        throw Error("Please Configure RAWTX first");
+      if (Config.RAWTXCONTRACTADDRESS == undefined)
+        throw Error("Please Configure RAWTXCONTRACTADDRESS first");
       const currentCount =
         Number(Config.RAWTXCOUNT) -
         Number((await sqlite.getTodayTxLog(core.address, "raw")).length);
@@ -63,17 +111,6 @@ async function operation(acc) {
       for (const tx of Array(txCount)) {
         await core.rawTx();
         await sqlite.insertData(core.address, new Date().toISOString(), "raw");
-      }
-    }
-
-    if (Config.USESELFTRANSFER ?? false) {
-      const currentCount =
-        Number(Config.SELFTRANSFERCOUNT) -
-        Number((await sqlite.getTodayTxLog(core.address, "self")).length);
-      const txCount = currentCount > 0 ? currentCount : 0;
-      for (const tx of Array(txCount)) {
-        await core.transfer();
-        await sqlite.insertData(core.address, new Date().toISOString(), "self");
       }
     }
 

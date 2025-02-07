@@ -14,14 +14,13 @@ const maxError = 5;
 let currentError = 0;
 async function compileContract() {
   console.log("Compiling Contract...");
-  const contractPath = path.resolve(basePath, "YourToken.sol");
+  const contractPath = path.resolve(basePath, "SkelDropHuntToken.sol");
   const contractSource = fs.readFileSync(contractPath, "utf8");
   console.log("Contract path :", contractPath);
-
   const input = {
     language: "Solidity",
     sources: {
-      ["YourToken.sol"]: {
+      ["SkelDropHuntToken.sol"]: {
         content: contractSource,
       },
     },
@@ -35,12 +34,15 @@ async function compileContract() {
         enabled: true,
         runs: 200,
       },
-      evmVersion: DeployerConfig.EVMVERSION,
+      evmVersion:
+        DeployerConfig.EVMVERSION != "default"
+          ? DeployerConfig.EVMVERSION
+          : undefined,
     },
   };
 
   const compiledContract = JSON.parse(solc.compile(JSON.stringify(input)));
-  const contract = compiledContract.contracts["YourToken.sol"];
+  const contract = compiledContract.contracts["SkelDropHuntToken.sol"];
   const contractName = Object.keys(contract)[0];
   const abi = contract[contractName].abi;
   const bytecode = contract[contractName].evm.bytecode.object;
@@ -80,7 +82,7 @@ async function deployContract(
     
   Name : ${name}
   Symbol : ${symbol}
-  Suppy : ${initialSupplyBigNumber}
+  Supply : ${initialSupplyBigNumber}
 `
   );
 
@@ -134,7 +136,26 @@ async function confirmDeployment(contract) {
     }, Waiting for Block Confirmation`
   );
   const result = await contract.deploymentTransaction().wait();
-  console.log(`Contract Deployed at: ${result.contractAddress}`);
+  console.log(`\nContract Adress: ${result.contractAddress}`);
+  console.log(
+    `Contract Address On Explorer : ${RPC.EXPLORER}address/${result.contractAddress}`
+  );
+  console.log(
+    `Please Verify Your Contract Using This Detail : 
+
+Contract Verification Link : ${RPC.EXPLORER}address/${result.contractAddress}/contract-verification
+Contract License : MIT License (MIT)
+Verification methid (Compiler Type) : Solidity (Single File)
+Compiler : v0.8.28
+EVM Version : ${DeployerConfig.EVMVERSION}
+Optimization Enabled : TRUE (200)
+Contract Code : Copy Paste Everything from /src/core/deployer/SkelDropHuntToken.sol
+
+
+Thanks for using our EVM TX DEPLOYER tool
+Regards: Widiskel (Skel Drop Hunt)
+`
+  );
 }
 
 (async () => {
@@ -170,7 +191,7 @@ async function confirmDeployment(contract) {
       /**
        * @type {Wallet}
        */
-      wallet = new ethers.Wallet.fromPhrase(data, provider);
+      wallet = ethers.Wallet.fromPhrase(data, provider);
     } else if (type == "Private Key") {
       /**
        * @type {Wallet}

@@ -28,22 +28,35 @@ class Twist {
     const address = core.address ?? "-";
     const balance = core.balance ?? {};
     const eth = balance.ETH ?? "-";
-    const weth = balance.WETH ?? "-";
-    const wethSymbol = core.tokenSymbol ?? "-";
+    const txCount = core.onchainCount ?? "-";
 
     const tx = (await sqlite.getTodayTxLog(address, "tx")).length;
+    const txEnabled = Config.USEWRAPUNWRAP == true ? "ON" : "OFF";
     const raw = (await sqlite.getTodayTxLog(address, "raw")).length;
+    const rawEnabled = Config.USERAWTXDATA == true ? "ON" : "OFF";
     const self = (await sqlite.getTodayTxLog(address, "self")).length;
+    const other = (await sqlite.getTodayTxLog(address, "other")).length;
+    const transferEnabled = Config.USETRANSFER == true ? "ON" : "OFF";
+    const deploy = (await sqlite.getTodayTxLog(address, "deployed")).length;
+    const deployEnabled =
+      Config.DEPLOYCONTRACTINTERACTION == true ? "ON" : "OFF";
 
     this.twisters.put(acc, {
-      text: `
+      text: ` 
 ================== Account ${accIdx + 1} =================
-Address         : ${address}
-Balance         : ${eth} ${RPC.SYMBOL}
-                  ${weth} ${wethSymbol}
-W/U Count       : ${tx} of ${Config.WRAPUNWRAPCOUNT ?? "?"}
-RAWTX Count     : ${raw} of ${Config.RAWTXCOUNT ?? "?"}
-Transfer Count  : ${self} of ${Config.SELFTRANSFERCOUNT ?? "?"}
+Address          : ${address}
+Balance          : ${eth} ${RPC.SYMBOL}
+Onchain TX Total : ${txCount} Onchain Transaction
+Transfer Count   : ${self} of ${
+        Config.SELFTRANSFERCOUNT ?? "?"
+      } SELF & ${other} of ${
+        Config.OTHERUSERTRANSFERCOUNT ?? "?"
+      } OTHER (${transferEnabled})
+RAWTX Count      : ${raw} of ${Config.RAWTXCOUNT ?? "?"} (${rawEnabled})
+W/U Count        : ${tx} of ${Config.WRAPUNWRAPCOUNT ?? "?"} (${txEnabled})
+Deploy Tx Count  : ${deploy} of ${
+        Config.DEPLOYCONTRACTINTERACTIONCOUNT ?? "?"
+      } (${deployEnabled})
                
 Status : ${msg}
 Delay : ${delay}

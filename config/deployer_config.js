@@ -1,5 +1,5 @@
 export class DeployerConfig {
-  static GWEIPRICE = 5;
+  static GWEIPRICE = 25;
   static EVMVERSION = "shanghai"; // EX: "shanghai";
-  static GASLIMIT = 1000000;
+  static GASLIMIT = 3000000; //IF TRANSACTION FAILED REGARDING TO GASS YOU CAN ADJUST THIS HIGHER OR LOWER
 }
