@@ -100,7 +100,7 @@ async function deployContract(
     const gasPrice =
       fee.gasPrice > customGasPrice ? fee.gasPrice : customGasPrice;
     console.log("Deploying using gasLimit : ", gas);
-    console.log("Deploying using gasPrice : ", gasPrices);
+    console.log("Deploying using gasPrice : ", gasPrice);
 
     const contract = await factory.deploy(
       name,
