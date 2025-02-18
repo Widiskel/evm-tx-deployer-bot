@@ -33,9 +33,9 @@ async function operation(acc) {
         Number((await sqlite.getTodayTxLog(core.address, "tx")).length);
       const txCount = currentCount > 0 ? currentCount : 0;
       for (const count of Array(txCount)) {
-        if (core.balance.ETH < 0.0015)
+        if (core.balance.ETH < Config.TXAMOUNTMAX)
           throw Error(
-            "Balance is less than 0.0015 ETH, please fill up your balance"
+            `Balance is less than ${Config.TXAMOUNTMAX} ${RPC.SYMBOL}, please fill up your balance`
           );
         try {
           await core.deposit();
