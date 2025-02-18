@@ -15,11 +15,11 @@ async function operation(acc) {
     await core.connectWallet();
     await core.getBalance();
 
-    if (core.balance.ETH < 0.0015) {
+    if (core.balance.ETH < Config.TXAMOUNTMAX) {
       await Helper.delay(
         100000,
         acc,
-        `Minimum ${RPC.SYMBOL} Balance Is 0.0015 ${RPC.SYMBOL}`,
+        `Minimum ${RPC.SYMBOL} Balance Is ${Config.TXAMOUNTMAX} ${RPC.SYMBOL}`,
         core
       );
       await operation(acc);
