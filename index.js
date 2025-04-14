@@ -25,7 +25,9 @@ async function operation(acc) {
       await operation(acc);
     }
 
-    const delaytx = Helper.random(10000, 60000 * 2);
+    const delayTxMin = Config.MINDELAYEACHTXINSEC ?? 60;
+    const delayTxMax = Config.MAXDELAYEACHTXINSEC ?? 120;
+    const delaytx = Helper.random(delayTxMin * 1000, delayTxMax * 1000);
 
     if (Config.USEWRAPUNWRAP ?? true) {
       if (Config.WRAPPEDTOKENCONTRACTADDRESS == undefined)
