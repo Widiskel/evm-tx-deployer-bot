@@ -73,6 +73,13 @@ async function operation(acc) {
       for (const tx of Array(txCount)) {
         await core.transfer();
         await sqlite.insertData(core.address, new Date().toISOString(), "self");
+
+        await Helper.delay(
+          delaytx,
+          acc,
+          `Delaying for ${Helper.msToTime(delaytx)} Before Executing Next TX`,
+          core
+        );
       }
       for (const tx of Array(otherTxCount)) {
         await core.transfer(false);
