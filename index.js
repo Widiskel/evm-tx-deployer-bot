@@ -25,6 +25,8 @@ async function operation(acc) {
       await operation(acc);
     }
 
+    const delaytx = Helper.random(10000, 60000 * 2);
+
     if (Config.USEWRAPUNWRAP ?? true) {
       if (Config.WRAPPEDTOKENCONTRACTADDRESS == undefined)
         throw Error("Please Configure WRAPPEDTOKENCONTRACTADDRESS first");
@@ -49,11 +51,11 @@ async function operation(acc) {
             core
           );
         }
-        const delay = Helper.random(10000, 60000 * 2);
+
         await Helper.delay(
-          delay,
+          delaytx,
           acc,
-          `Delaying for ${Helper.msToTime(delay)} Before Executing Next TX`,
+          `Delaying for ${Helper.msToTime(delaytx)} Before Executing Next TX`,
           core
         );
       }
@@ -78,6 +80,13 @@ async function operation(acc) {
           core.address,
           new Date().toISOString(),
           "other"
+        );
+
+        await Helper.delay(
+          delaytx,
+          acc,
+          `Delaying for ${Helper.msToTime(delaytx)} Before Executing Next TX`,
+          core
         );
       }
     }
@@ -104,6 +113,12 @@ async function operation(acc) {
           new Date().toISOString(),
           "deployed"
         );
+        await Helper.delay(
+          delaytx,
+          acc,
+          `Delaying for ${Helper.msToTime(delaytx)} Before Executing Next TX`,
+          core
+        );
       }
     }
 
@@ -119,6 +134,12 @@ async function operation(acc) {
       for (const tx of Array(txCount)) {
         await core.rawTx();
         await sqlite.insertData(core.address, new Date().toISOString(), "raw");
+        await Helper.delay(
+          delaytx,
+          acc,
+          `Delaying for ${Helper.msToTime(delaytx)} Before Executing Next TX`,
+          core
+        );
       }
     }
 
